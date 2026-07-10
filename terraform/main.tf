@@ -527,9 +527,9 @@ ENV
 # Auto Scaling Group
 resource "aws_autoscaling_group" "hotel_asg" {
   name_prefix         = "hotel-asg-"
-  desired_capacity    = 2
+  desired_capacity    = 1
   min_size            = 1
-  max_size            = 4
+  max_size            = 2
   vpc_zone_identifier = [aws_subnet.private_app_1.id, aws_subnet.private_app_2.id]
   target_group_arns   = [aws_lb_target_group.hotel_tg.arn]
 
