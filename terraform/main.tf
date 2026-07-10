@@ -311,7 +311,7 @@ resource "aws_s3_bucket_policy" "public_read_policy" {
 # --------------------------------------------------------
 
 resource "aws_db_subnet_group" "db_subnets" {
-  name       = "hotel-db-subnet-group"
+  name       = "hotel-db-subnet-group-${random_id.bucket_suffix.hex}"
   subnet_ids = [aws_subnet.private_db_1.id, aws_subnet.private_db_2.id]
 
   tags = {
@@ -320,7 +320,7 @@ resource "aws_db_subnet_group" "db_subnets" {
 }
 
 resource "aws_db_instance" "hotel_db" {
-  identifier             = "lumina-hotel-database"
+  identifier             = "lumina-hotel-database-${random_id.bucket_suffix.hex}"
   allocated_storage      = 20
   engine                 = "mysql"
   engine_version         = "8.0"
@@ -420,7 +420,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 # --------------------------------------------------------
 
 resource "aws_lb" "hotel_alb" {
-  name               = "hotel-alb"
+  name               = "hotel-alb-${random_id.bucket_suffix.hex}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
@@ -432,7 +432,7 @@ resource "aws_lb" "hotel_alb" {
 }
 
 resource "aws_lb_target_group" "hotel_tg" {
-  name     = "hotel-tg"
+  name     = "hotel-tg-${random_id.bucket_suffix.hex}"
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.hotel_vpc.id
