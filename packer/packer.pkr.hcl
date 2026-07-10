@@ -14,7 +14,7 @@ variable "aws_region" {
 
 source "amazon-ebs" "hotel_reservation" {
   ami_name      = "hotel-reservation-ami-{{timestamp}}"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
   region        = var.aws_region
   
   # Filter for Ubuntu 22.04 LTS image

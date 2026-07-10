@@ -478,7 +478,7 @@ resource "aws_cloudwatch_log_group" "app_logs" {
 resource "aws_launch_template" "hotel_lt" {
   name_prefix   = "hotel-lt-"
   image_id      = var.ami_id
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ec2_profile.name
