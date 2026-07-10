@@ -6,9 +6,10 @@ sudo rm -rf /var/lib/apt/lists/*
 sudo apt-get clean
 
 echo "=== System update and prerequisites ==="
-sudo apt-get update -y
+export DEBIAN_FRONTEND=noninteractive
+sudo apt-get update -o Acquire::GzipIndexes=false -y
 sudo apt-get upgrade -y
-sudo apt-get install -y curl git build-essential
+sudo apt-get install -y -o Dpkg::Options::="--force-confold" curl git build-essential
 
 echo "=== Installing Node.js v20 ==="
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
