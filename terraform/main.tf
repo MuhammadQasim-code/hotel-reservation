@@ -327,7 +327,7 @@ resource "aws_db_instance" "hotel_db" {
   instance_class         = "db.t3.micro"
   db_name                = "hotel_reservation"
   username               = "admin"
-  password               = var.db_password
+  password               = trimspace(var.db_password)
   db_subnet_group_name   = aws_db_subnet_group.db_subnets.name
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
   skip_final_snapshot    = true
@@ -505,8 +505,8 @@ resource "aws_launch_template" "hotel_lt" {
               DB_PORT=3306
               DB_NAME=hotel_reservation
               DB_USER=admin
-              DB_PASSWORD=${var.db_password}
-              JWT_SECRET=${var.jwt_secret}
+              DB_PASSWORD=${trimspace(var.db_password)}
+              JWT_SECRET=${trimspace(var.jwt_secret)}
               AWS_REGION=${var.aws_region}
               AWS_S3_BUCKET_NAME=${aws_s3_bucket.hotel_images.id}
               ENV
