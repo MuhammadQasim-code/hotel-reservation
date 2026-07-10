@@ -1,15 +1,16 @@
 #!/bin/bash
 set -e
 
-echo "=== Cleaning apt cache and lists to prevent GPG errors ==="
+echo "=== Configuring AWS regional mirrors to prevent GPG errors ==="
+sudo sed -i 's/archive.ubuntu.com/us-east-1.ec2.archive.ubuntu.com/g' /etc/apt/sources.list
 sudo rm -rf /var/lib/apt/lists/*
 sudo apt-get clean
 
 echo "=== System update and prerequisites ==="
 export DEBIAN_FRONTEND=noninteractive
-sudo apt-get update -o Acquire::GzipIndexes=false -y
+sudo apt-get update -y
 sudo apt-get upgrade -y
-sudo apt-get install -y -o Dpkg::Options::="--force-confold" curl git build-essential
+sudo apt-get install -y -o Dpkg::Options::="--force-confold" curl git
 
 echo "=== Installing Node.js v20 ==="
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
