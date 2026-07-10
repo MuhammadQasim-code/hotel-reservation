@@ -344,7 +344,7 @@ resource "aws_db_instance" "hotel_db" {
 # --------------------------------------------------------
 
 resource "aws_iam_role" "ec2_role" {
-  name = "hotel-ec2-iam-role"
+  name = "hotel-ec2-iam-role-${random_id.bucket_suffix.hex}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -362,7 +362,7 @@ resource "aws_iam_role" "ec2_role" {
 
 # Policy allowing CloudWatch Logs and S3 read/write
 resource "aws_iam_policy" "ec2_custom_policy" {
-  name        = "hotel-ec2-custom-policy"
+  name        = "hotel-ec2-custom-policy-${random_id.bucket_suffix.hex}"
   description = "Allows logs streaming, S3 upload/download, and KMS decryption"
 
   policy = jsonencode({
@@ -411,7 +411,7 @@ resource "aws_iam_role_policy_attachment" "ssm_attach" {
 }
 
 resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "hotel-ec2-instance-profile"
+  name = "hotel-ec2-instance-profile-${random_id.bucket_suffix.hex}"
   role = aws_iam_role.ec2_role.name
 }
 
@@ -470,7 +470,7 @@ resource "aws_lb_listener" "hotel_listener" {
 
 # CloudWatch Log Group for application logging
 resource "aws_cloudwatch_log_group" "app_logs" {
-  name              = "/aws/ec2/hotel-reservation-system"
+  name              = "/aws/ec2/hotel-reservation-system-${random_id.bucket_suffix.hex}"
   retention_in_days = 30
 }
 
