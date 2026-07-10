@@ -1,0 +1,73 @@
+name: CI/CD Deploy Hotel Reservation System
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    name: Build AMI & Deploy Infrastructure
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
+        cache-dependency-path: './frontend/package-lock.json'
+        # Note: If no lock file exists, caching is skipped. Let's make sure it runs smoothly.
+
+    - name: Install and Build Frontend
+      run: |
+        cd frontend
+        npm install
+        npm run build
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    - name: Install HashiCorp Packer
+      uses: hashicorp/setup-packer@v2
+      with:
+        version: "latest"
+
+    - name: Packer Init and Build AMI
+      id: packer_build
+      run: |
+        cd packer
+        packer init packer.pkr.hcl
+        packer build packer.pkr.hcl
+        
+        # Parse AMI ID from manifest.json
+        AMI_ID=$(jq -r '.builds[-1].artifact_id | split(":") | .[1]' manifest.json)
+        echo "AMI_ID=$AMI_ID" >> $GITHUB_ENV
+        echo "Generated AMI ID: $AMI_ID"
+
+    - name: Install HashiCorp Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "latest"
+
+    - name: Terraform Format & Validate
+      run: |
+        cd terraform
+        terraform fmt -check
+        terraform init
+        terraform validate
+
+    - name: Terraform Apply
+      run: |
+        cd terraform
+        terraform apply -auto-approve \
+          -var="ami_id=${{ env.AMI_ID }}" \
+          -var="db_password=${{ secrets.DB_PASSWORD }}" \
+          -var="jwt_secret=${{ secrets.JWT_SECRET }}" \
+          -var="aws_region=${{ secrets.AWS_REGION }}"
