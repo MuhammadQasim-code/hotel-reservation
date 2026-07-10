@@ -538,6 +538,13 @@ resource "aws_autoscaling_group" "hotel_asg" {
     version = "$Latest"
   }
 
+  instance_refresh {
+    strategy = "Rolling"
+    preferences {
+      min_healthy_percentage = 50
+    }
+  }
+
   tag {
     key                 = "Name"
     value               = "hotel-reservation-instance"
