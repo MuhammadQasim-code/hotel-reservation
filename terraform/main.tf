@@ -493,15 +493,11 @@ resource "aws_launch_template" "hotel_lt" {
   user_data = base64encode(<<-EOF
               #!/bin/bash
               
-              # Split RDS Endpoint to strip host from port
-              DB_HOST_FULL="${aws_db_instance.hotel_db.endpoint}"
-              DB_HOST_CLEAN=$${DB_HOST_FULL%%:*}
-              
               # Write connection settings to environment configuration
-              cat << ENV > /var/opt/hotel-reservation/backend/.env
+              cat << 'ENV' > /var/opt/hotel-reservation/backend/.env
 PORT=5000
 NODE_ENV=production
-DB_HOST=$DB_HOST_CLEAN
+DB_HOST=${split(":", aws_db_instance.hotel_db.endpoint)[0]}
 DB_PORT=3306
 DB_NAME=hotel_reservation
 DB_USER=admin
