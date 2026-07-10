@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+echo "=== Cleaning apt cache and lists to prevent GPG errors ==="
+sudo rm -rf /var/lib/apt/lists/*
+sudo apt-get clean
+
 echo "=== System update and prerequisites ==="
 sudo apt-get update -y
 sudo apt-get upgrade -y
