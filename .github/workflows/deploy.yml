@@ -34,6 +34,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
+    - name: Restore Terraform State
+      uses: actions/cache@v4
+      with:
+        path: |
+          terraform/terraform.tfstate
+          terraform/terraform.tfstate.backup
+        key: terraform-state-${{ github.run_id }}
+        restore-keys: |
+          terraform-state-
+
     - name: Install HashiCorp Packer
       uses: hashicorp/setup-packer@v2
       with:
