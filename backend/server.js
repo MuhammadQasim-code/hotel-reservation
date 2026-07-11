@@ -1,6 +1,6 @@
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const app = require('./app');
 const dbInit = require('./config/db-init');
-require('dotenv').config();
 
 const PORT = process.env.PORT || 5000;
 
