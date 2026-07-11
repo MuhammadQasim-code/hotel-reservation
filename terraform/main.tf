@@ -501,8 +501,8 @@ DB_HOST=${split(":", aws_db_instance.hotel_db.endpoint)[0]}
 DB_PORT=3306
 DB_NAME=hotel_reservation
 DB_USER=admin
-DB_PASSWORD=${trimspace(var.db_password)}
-JWT_SECRET=${trimspace(var.jwt_secret)}
+DB_PASSWORD="${trimspace(var.db_password)}"
+JWT_SECRET="${trimspace(var.jwt_secret)}"
 AWS_REGION=${var.aws_region}
 AWS_S3_BUCKET_NAME=${aws_s3_bucket.hotel_images.id}
 ENV
