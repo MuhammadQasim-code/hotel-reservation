@@ -1,6 +1,7 @@
 const Reservation = require('../models/Reservation');
 const Hotel = require('../models/Hotel');
 const AppError = require('../utils/appError');
+const User = require('../models/User');
 
 exports.createReservation = async (req, res, next) => {
   try {
