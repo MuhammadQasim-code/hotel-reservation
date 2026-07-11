@@ -491,10 +491,10 @@ resource "aws_launch_template" "hotel_lt" {
 
   # User data handles dynamic injection of connection parameters and secret keys into backend .env
   user_data = base64encode(<<-EOF
-              #!/bin/bash
-              
-              # Write connection settings to environment configuration
-              cat << 'ENV' > /var/opt/hotel-reservation/backend/.env
+#!/bin/bash
+
+# Write connection settings to environment configuration
+cat << 'ENV' > /var/opt/hotel-reservation/backend/.env
 PORT=5000
 NODE_ENV=production
 DB_HOST=${split(":", aws_db_instance.hotel_db.endpoint)[0]}
@@ -506,10 +506,10 @@ JWT_SECRET=${trimspace(var.jwt_secret)}
 AWS_REGION=${var.aws_region}
 AWS_S3_BUCKET_NAME=${aws_s3_bucket.hotel_images.id}
 ENV
-              
-              # Restart server application to mount dynamic variables
-              sudo -u ubuntu pm2 restart all
-              EOF
+
+# Restart server application to mount dynamic variables
+sudo -u ubuntu pm2 restart all
+EOF
   )
 
   tag_specifications {
