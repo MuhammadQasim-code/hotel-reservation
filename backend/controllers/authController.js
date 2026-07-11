@@ -60,10 +60,12 @@ exports.signup = async (req, res, next) => {
     const token = generateToken({ id: user.id, email: user.email, role: user.role });
 
     res.status(201).json({
-      status: 'success',
-      token,
-      data: { user }
-    });
+  status: 'success',
+  data: {
+    token,
+    user
+  }
+});
   } catch (error) {
     next(error);
   }
@@ -93,18 +95,18 @@ exports.login = async (req, res, next) => {
     const token = generateToken({ id: user.id, email: user.email, role: user.role });
 
     res.status(200).json({
-      status: 'success',
-      token,
-      data: {
-        user: {
-          id: user.id,
-          fullName: user.full_name,
-          email: user.email,
-          phoneNumber: user.phone_number,
-          role: user.role
-        }
-      }
-    });
+  status: 'success',
+  data: {
+    token,
+    user: {
+      id: user.id,
+      fullName: user.full_name,
+      email: user.email,
+      phoneNumber: user.phone_number,
+      role: user.role
+    }
+  }
+});
   } catch (error) {
     next(error);
   }
